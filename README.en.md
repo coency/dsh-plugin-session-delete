@@ -22,10 +22,10 @@ Its Sessions move to "ungrouped" (DSH behaviour) and **can then be deleted direc
 
 | Case | "Delete permanently" | Deletable | What to do |
 |---|---|---|---|
-| Idle for a long time, background process released | clickable | ✅ yes | just click "Delete permanently" |
-| Background process still holds it | greyed out (disabled) | ❌ no | click **Archive** first, then open "Delete session" — the button becomes available; click "Delete permanently" |
+| Background process released (Session idle for a long time) | clickable | ✅ yes | just click "Delete permanently" |
+| Background process still holding it (Session used recently) | greyed out (disabled) | ❌ no | click **Archive session** first, then "Delete session" (the "Delete permanently" button becomes available again) |
 
-> A Session deleted after archiving moves to "ungrouped" — that is only a cache entry and **disappears after restarting DSH**.
+> A Session deleted after archiving moves to "ungrouped" — that is only a cache entry; **ignore it**. It disappears after restarting DSH, so don't worry.
 
 ## Install
 

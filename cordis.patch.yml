@@ -1,0 +1,13 @@
+# dsh-session-delete — bundle patch
+#
+# One host row: the plugin's default export is a `TypertRemoteService` subclass
+# that ALSO registers the model-facing `session_delete` tool in its constructor,
+# so a single row carries both halves of the host side. The browser half rides
+# the same package (`dsh.client` → `./client`), and the client-modules registry
+# allows exactly one Loader source per client-declaring package — which is why
+# this is one package and one row rather than three.
+#
+# The row resolves by package name from the profile's installed dependencies.
+- insert:
+    - id: session-delete
+      name: "dsh-session-delete"

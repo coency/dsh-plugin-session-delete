@@ -44,6 +44,7 @@ what would be removed (directories, bytes) and only the **Delete permanently** b
 - **Live Sessions cannot be deleted**: the host holds their writer → archive it, restart `dsh web`, then delete.
 - **Subagent Sessions** use a bare uuid as their directory name (no `session-` prefix); both spellings are accepted.
 - **Host plugins are not sandboxed**: this code deletes files under `$DSH_HOME`. That is the whole point, and the implementation is short and auditable.
+- **One Session cannot be deleted concurrently**: if a deletion for the same Session is already running (you clicked while an agent was deleting it, say), the second call reports that it is already being deleted — retry once the first finishes.
 - **The legacy whole-unit projection cache is left alone**: the per-record file (`storages/session_projcache/sessions/<id>.json`) is deleted, but the old `storages/session_projcache.json` is not touched. DSH only rebuilds a record from that file when no per-record file exists, and it validates the record's identity, so a rebuilt stale record is not adopted.
 
 ## Version compatibility

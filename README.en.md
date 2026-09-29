@@ -41,7 +41,8 @@ what would be removed (directories, bytes) and only the **Delete permanently** b
 ## Known limitations
 
 - **No undo, no backup** — deliberately; a backup would make deletion a two-place state problem.
-- **Live Sessions cannot be deleted**: the host holds their writer → archive it, restart `dsh web`, then delete.
+- **A live, unarchived Session cannot be deleted**: the host holds its writer → **archive it first** (DSH's archive action stops that Session's work), then delete it — **no restart needed**.
+- **An archived Session can be deleted right away**, even while the host still holds it in memory (DSH keeps archived Sessions loaded until the process exits). If a shutdown flush recreates its directory, delete it again — by then it is not loaded.
 - **Subagent Sessions** use a bare uuid as their directory name (no `session-` prefix); both spellings are accepted.
 - **Host plugins are not sandboxed**: this code deletes files under `$DSH_HOME`. That is the whole point, and the implementation is short and auditable.
 - **One Session cannot be deleted concurrently**: if a deletion for the same Session is already running (you clicked while an agent was deleting it, say), the second call reports that it is already being deleted — retry once the first finishes.

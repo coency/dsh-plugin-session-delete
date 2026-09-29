@@ -1,0 +1,6 @@
+# Keep every text file at LF in the repository so contributors on Windows and
+# Unix produce identical diffs (git's core.autocrlf default otherwise rewrites
+# the working tree and warns on every add).
+* text=auto eol=lf
+*.png binary
+*.jpg binary

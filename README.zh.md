@@ -21,7 +21,7 @@
 ## 安装
 
 ```bash
-dsh plugin --profile web add github:koency/dsh-session-delete
+dsh plugin --profile web add github:coency/dsh-session-delete
 ```
 
 本包声明了 `dsh.bundle.patch`，插件管理器会把它作为组合包安装并默认启用。安装后**重启 `dsh web`**

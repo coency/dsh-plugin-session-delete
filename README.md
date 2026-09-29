@@ -23,7 +23,7 @@ Both share one deletion core, so they can never drift apart.
 ## Install
 
 ```bash
-dsh plugin --profile web add github:koency/dsh-session-delete
+dsh plugin --profile web add github:coency/dsh-session-delete
 ```
 
 The package declares `dsh.bundle.patch`, so the plugin manager installs and enables it as a bundle.

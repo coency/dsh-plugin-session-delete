@@ -41,6 +41,11 @@ dsh plugin --profile web add github:coency/dsh-session-delete
 { "sessionId": "…", "keepFiles": true }
 ```
 
+**自检工具** `session_delete_selfcheck`（只读、不改任何东西）：升级 DSH 之后跑一次，它会报告插件依赖的
+各项宿主契约是否仍然成立——标记写入路径、显式 wire 注册、`defineTool` 解析、工具注册表、工作区注册表方法
+（`detachSession` / `unarchiveSession` / `unpinSession`）、会话与投影缓存的存储布局，以及插件/dsh/Node/平台
+版本和一句话结论。
+
 **会被拒绝的情况**：
 
 - 正在执行本次调用的那个会话（不能自删）；
@@ -55,14 +60,41 @@ dsh plugin --profile web add github:coency/dsh-session-delete
 
 **不可恢复，不保留备份。**
 
-## 兼容性
+## 版本兼容与升级检查
 
-- 已在 **dsh 0.1.7-rc.2**（Web profile，Node v24.14.1，Windows）上实测：侧栏删除与工具删除均通过。
-- 刻意**不声明任何 DSH peer 依赖**：`dsh plugin add` 会在安装前校验声明的 peer，写死版本会让新版本
-  必须逐个走"版本豁免"，反而抬高安装门槛。若你的 DSH 版本在安装时被兼容性检查拦下，用
+**先说清楚**：本插件依赖 DSH 的**内部约定**（不是公开的插件 API）。已在 **dsh 0.1.7-rc.2**（Web profile、
+Node v24.14.1、Windows）实测通过——侧栏删除与工具删除都真实删掉了会话。DSH 处于 rc 阶段，内部约定会变，
+所以升级后可能出现四种结局：
+
+| 结局 | 症状 | 判断 |
+|---|---|---|
+| ① 完全可用 | 无异常 | `session_delete_selfcheck` 报 `ok` + 侧栏有菜单项 |
+| ② 宿主可用、侧栏入口消失 | 菜单里没有「删除会话…」，但 agent 仍能删 | 只有浏览器半侧受影响（slot 改名时 `slots.inject` 会静默等待，不报错） |
+| ③ 单侧失效 | 工具不存在，或点菜单报"远端不可用" | 弹窗/工具错误里会给原始原因 |
+| ④ 彻底不可用 | 插件加载报错 | 见下方"最坏情况已消除" |
+
+**升级后 30 秒自检**：
+
+1. 让 agent 跑 `session_delete_selfcheck` → `verdict` 为 `ok` 即宿主契约齐全；
+2. 看侧栏会话行 `...` 里有没有「删除会话…」；
+3. 真删一条小会话，看结果里的"清理 N 个路径"——**N ≥ 2**（会话目录 + 缓存记录）才算磁盘也清了；若为 0，
+   说明存储布局变了、文件没被清掉（注册表引用仍会被正确摘除）。
+
+**依赖清单（按风险排序）**：客户端 slot 键与 props（只影响侧栏入口）> `dsh-client-modules` 的 bundle 形态
+（只影响浏览器半侧）> Typert 协议的标记描述符版本与 `ctx.typert.register` 校验（只影响 RPC）> 存储布局
+（只影响磁盘清除）> 工作区注册表方法名（改名则删除直接报错，且**在删数据前中止**）> `dsh-tools` 的
+`defineTool` DSL（有本地兜底，最差只丢工具）。
+
+**最坏情况已消除**：0.1.0 把 Remote 标记描述符硬编码为 `version: 1`，若协议升级到 v2 且不再接受 v1，网关扫描
+我的服务时会抛错，可能连累**整个 `/api`**。0.2.0 改为**调用协议自己的 `Remote(name, context)` 入口**写标记，
+版本跟随当前安装的协议；该 API 不可用时才退回 v1 描述符，并把实际路径报告在自检里（`markerSource`）。
+
+**其他**：
+
+- 刻意**不声明任何 DSH peer 依赖**：`dsh plugin add` 会在安装前校验声明的 peer，写死版本会让未来版本必须逐个
+  走"版本豁免"，反而抬高安装门槛。若你的 DSH 在安装时被兼容性检查拦下，用
   `dsh plugin --profile web version-exemptions` 查看运行版本，再按提示 `allow-version`。
-- 依赖的内部约定（Typert Remote 的标记描述符、`dsh-client-modules` 的 bundle 形态、连接层
-  `rpc.call('/api', …)`）随 DSH 版本可能变化；升级 DSH 后请重跑一次 dryRun 验证。
+- 若升级后确实失效，通常只是**几行**的问题（slot 键名、描述符版本、存储路径），可以对着新版 DSH 的包源码直接修。
 
 ## 卸载
 

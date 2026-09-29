@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.2.0
+
+Upgrade-hardening release.
+
+- **Remote markers now use the protocol's own writer.** `installRemoteMarkers()` calls the
+  installed protocol's decorator entry (`Remote(name, context)`) so the stored marker descriptor
+  version follows whatever that protocol expects; the version-1 descriptor written by 0.1.0 stays
+  as a fallback only. This removes the worst upgrade failure mode: a hardcoded descriptor version
+  being rejected while the gateway scans the service (which could have failed every `/api`
+  request, not just this plugin's).
+- **New read-only tool `session_delete_selfcheck`.** After a DSH upgrade it reports which host
+  contracts still match: the marker route, the explicit wire registration, `defineTool`
+  resolution, the tools registry, the workspace-registry methods (`detachSession` /
+  `unarchiveSession` / `unpinSession`), and the session / projection-cache storage layout — plus
+  plugin, DSH, Node, and platform versions and a one-line verdict. It changes nothing.
+- `__debug` now exposes `markerSource` and `strictRegistration` for offline verification.
+- READMEs document version compatibility, the four possible upgrade outcomes, and the upgrade
+  checklist.
+
 ## 0.1.0
 
 First release.

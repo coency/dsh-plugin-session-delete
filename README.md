@@ -43,6 +43,12 @@ removed (directories, bytes) and only the **Delete permanently** button performs
 { "sessionId": "…", "keepFiles": true }
 ```
 
+**Self-check tool** `session_delete_selfcheck` (read-only, changes nothing): run it after a DSH upgrade
+and it reports whether each host contract the plugin depends on still holds — the marker route, the
+explicit wire registration, `defineTool` resolution, the tools registry, the workspace-registry
+methods (`detachSession` / `unarchiveSession` / `unpinSession`), and the session / projection-cache
+storage layout — plus plugin, DSH, Node, and platform versions and a one-line verdict.
+
 **Refused**: the Session running the call (no self-deletion), and any Session still live in the host
 process (open writer) — archive it and restart `dsh web` first.
 
@@ -55,17 +61,49 @@ process (open writer) — archive it and restart `dsh web` first.
 
 **Irreversible. No backup is kept.**
 
-## Compatibility
+## Version compatibility and upgrade checks
 
-- Verified on **dsh 0.1.7-rc.2** (Web profile, Node v24.14.1, Windows): both the sidebar dialog and the
-  tool deleted real Sessions end to end.
+**Be aware**: this plugin depends on DSH **internal contracts**, not on a public plugin API. It is
+verified on **dsh 0.1.7-rc.2** (Web profile, Node v24.14.1, Windows) — the sidebar dialog and the tool
+both deleted real Sessions. DSH is at release-candidate stage and its internals move, so after an
+upgrade one of four things happens:
+
+| Outcome | Symptoms | How to tell |
+|---|---|---|
+| ① Everything works | nothing unusual | `session_delete_selfcheck` reports `ok` and the sidebar item exists |
+| ② Host works, sidebar entry gone | no "Delete session…" in the menu, but the agent can still delete | browser half only (a renamed slot makes `slots.inject` wait silently) |
+| ③ One side breaks | tool missing, or the dialog says the remote is unavailable | the dialog/tool error carries the original reason |
+| ④ Nothing works | the plugin fails to load | see "worst case removed" below |
+
+**30-second check after upgrading:**
+
+1. Ask the agent to run `session_delete_selfcheck` — a `verdict` of `ok` means every host contract is intact;
+2. Check the sidebar row `...` menu for "Delete session…";
+3. Delete a small Session and read the result's "N path(s) removed" — it must be **≥ 2** (Session
+   directory + cache record). A `0` means the storage layout moved and files were left behind (registry
+   references are still cleaned correctly).
+
+**Dependency list, ordered by risk**: client slot keys and props (sidebar entry only) >
+`dsh-client-modules` bundle shape (browser half only) > Typert marker descriptor version and
+`ctx.typert.register` validation (RPC only) > storage layout (disk cleanup only) > workspace-registry
+method names (a rename fails the delete loudly, and **before any data is removed**) > `dsh-tools`
+`defineTool` DSL (local fallback; worst case the tool is missing).
+
+**Worst case removed**: 0.1.0 hardcoded the Remote marker descriptor at `version: 1`. Had the protocol
+moved to v2 without accepting v1, the gateway would have thrown while scanning this service — which
+could have failed **every `/api` request**, not just this plugin's. 0.2.0 writes the markers through the
+protocol's own `Remote(name, context)` entry so the stored version follows the installed protocol; the
+v1 descriptor remains only as a fallback, and the self-check reports which route was used
+(`markerSource`).
+
+**Also**:
+
 - No DSH peer dependency is declared on purpose: `dsh plugin add` validates declared peers before
   installing, so pinning one would force every future DSH version through a version exemption. If your
   DSH build rejects the install, inspect `dsh plugin --profile web version-exemptions` and follow its
   `allow-version` hint.
-- The internals it relies on (Typert Remote marker descriptors, the client-module bundle shape, the
-  `connection.rpc.call('/api', …)` transport) can change between DSH versions — re-run a `dryRun` after
-  upgrading.
+- If an upgrade does break it, the fix is usually a few lines (a slot key, a descriptor version, a
+  storage path) found by reading the new DSH package sources.
 
 ## Uninstall
 

@@ -22,29 +22,12 @@ Both share one deletion core, so they can never drift apart.
 
 ## Install
 
-### As a bundle (recommended)
-
 ```bash
-# GitHub (once published)
-dsh plugin --profile web add github:<owner>/dsh-session-delete
-
-# or a local directory / tarball / private registry
-dsh plugin --profile web add /path/to/dsh-session-delete
+dsh plugin --profile web add github:koency/dsh-session-delete
 ```
 
 The package declares `dsh.bundle.patch`, so the plugin manager installs and enables it as a bundle.
-Restart `dsh web` afterwards (or let a `patchReload: live` profile pick it up).
-
-### Manually
-
-Add the package to the profile's dependencies, then append to
-`~/.dsh/profiles/web/cordis.patch.yml`:
-
-```yaml
-- insert:
-    - id: session-delete
-      name: "dsh-session-delete"
-```
+Restart `dsh web` afterwards (a `patchReload: live` profile picks it up immediately).
 
 ## Usage
 
@@ -90,7 +73,6 @@ process (open writer) — archive it and restart `dsh web` first.
 dsh plugin --profile web remove dsh-session-delete
 ```
 
-For a manual install, drop the `insert` block from `cordis.patch.yml` and remove the package directory.
 Nothing is restored: deleted Sessions stay deleted.
 
 ## Known limitations
@@ -105,6 +87,16 @@ Nothing is restored: deleted Sessions stay deleted.
   and the implementation is short and auditable.
 
 ## Development notes (read before editing)
+
+> Local iteration only: build an isolated test profile in a throwaway home so your everyday profile stays
+> untouched. This is not an installation method for users.
+
+```bash
+export DSH_HOME=/tmp/dsh-test
+dsh --profile webtest --from-default-profile web --dump-config   # compose the profile, do not serve
+dsh plugin --profile webtest add /path/to/checkout               # install the local checkout
+dsh --profile webtest --dump-config | grep session-delete        # confirm the bundle patch row landed
+```
 
 DSH caches plugin state in ways that will bite you repeatedly:
 

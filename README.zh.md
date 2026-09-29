@@ -20,28 +20,12 @@
 
 ## 安装
 
-### 方式一：作为组合包安装（推荐）
-
 ```bash
-# GitHub（发布后）
-dsh plugin --profile web add github:<owner>/dsh-session-delete
-
-# 或本地目录 / tarball / 私有 registry
-dsh plugin --profile web add /path/to/dsh-session-delete
+dsh plugin --profile web add github:koency/dsh-session-delete
 ```
 
-该包声明了 `dsh.bundle.patch`，插件管理器会把它作为组合包安装并默认启用；安装后**重启 `dsh web`**（或让
-profile 的 `patchReload: live` 生效）。
-
-### 方式二：手动挂载
-
-把包放进 profile 的依赖后，在 `~/.dsh/profiles/web/cordis.patch.yml` 末尾加：
-
-```yaml
-- insert:
-    - id: session-delete
-      name: "dsh-session-delete"
-```
+本包声明了 `dsh.bundle.patch`，插件管理器会把它作为组合包安装并默认启用。安装后**重启 `dsh web`**
+（若 profile 是 `patchReload: live` 则当场生效）。
 
 ## 用法
 
@@ -86,7 +70,7 @@ profile 的 `patchReload: live` 生效）。
 dsh plugin --profile web remove dsh-session-delete
 ```
 
-手动挂载的则删掉 `cordis.patch.yml` 里那个 insert 块 + 包目录。数据不会被恢复：已删除的会话就是删除了。
+数据不会被恢复：已删除的会话就是删除了。
 
 ## 已知限制
 
@@ -97,6 +81,16 @@ dsh plugin --profile web remove dsh-session-delete
 - **宿主插件不受工作区沙箱限制**：它能删 `$DSH_HOME` 下的文件——这正是本功能的前提，代码很短、可审计。
 
 ## 开发说明（改代码前必读）
+
+> 仅为本地迭代用：把一个隔离的测试 profile 建在临时 home 里，避免污染你日常使用的 profile。
+> 这不是给用户的安装方式。
+
+```bash
+export DSH_HOME=/tmp/dsh-test
+dsh --profile webtest --from-default-profile web --dump-config   # 先组合出 profile，不启服务
+dsh plugin --profile webtest add /path/to/checkout               # 装本地检出
+dsh --profile webtest --dump-config | grep session-delete        # 确认 bundle patch 的行已生效
+```
 
 DSH 的插件加载有几个会让人反复踩的缓存：
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Documentation: Chinese is now the repository's default README (`README.md`); English moved to
+  `README.en.md`.
+- Documentation: the install section also documents installing from the web UI (Plugins page →
+  Add plugin → Install → **Enable now**), and starting `dsh web` afterwards.
+
 ## 0.2.0
 
 Upgrade-hardening release.

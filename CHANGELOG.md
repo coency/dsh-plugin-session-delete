@@ -2,10 +2,10 @@
 
 ## Unreleased
 
-- Documentation: Chinese is now the repository's default README (`README.md`); English moved to
+- Documentation: Chinese is now the repository's default README (`README.md`); English lives in
   `README.en.md`.
-- Documentation: the install section also documents installing from the web UI (Plugins page →
-  Add plugin → Install → **Enable now**), and starting `dsh web` afterwards.
+- Documentation: the READMEs document only the sidebar flow. The agent-facing tool usage, the web-UI
+  install route, the upgrade-outcome tables, and the development notes were removed.
 
 ## 0.2.0
 

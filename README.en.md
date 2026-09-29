@@ -61,6 +61,16 @@ version exemption and raise the install barrier.
 dsh plugin --profile web remove dsh-session-delete
 ```
 
+Restart `dsh web` afterwards, then refresh the browser page:
+
+- The running host process may still hold the **already-loaded plugin module** — deleting its files and
+  removing its Loader row is not enough to unload it; only a restart of the process does that (the same
+  reason an install needs a restart);
+- The bundle the browser already loaded also survives until the page is reloaded, so the sidebar can keep
+  the "Delete session…" item until then;
+- A `patchReload: live` profile usually recomposes the host side right away, but **a restart remains the
+  reliable route**.
+
 Nothing is restored: deleted Sessions stay deleted.
 
 ## License

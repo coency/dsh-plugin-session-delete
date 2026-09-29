@@ -3,7 +3,7 @@
 [中文](README.md) | English
 
 Adds the **Session deletion** DeepSeek Harness (DSH) does not ship: every Session row's `...` menu gains
-a "Delete session…" item that permanently removes one stored Session together with its registry references.
+a "Delete session" item that permanently removes one stored Session together with its registry references.
 
 > DSH itself only archives; cleaning up stored Sessions is documented as out-of-band maintenance. This
 > plugin automates it in the correct order — **registry references first through the official write
@@ -20,12 +20,12 @@ Its Sessions move to "ungrouped" (DSH behaviour) and **can then be deleted direc
 
 **2. Deleting one Session inside a workspace**
 
-- **Its background process has been released** (the Session has been idle for a long time): the
-  "Delete permanently" button is clickable — just delete it.
-- **The button is disabled**: the Session's background process still holds it, so it cannot be deleted yet.
-- **To delete it anyway**: click **Archive** first, then open "Delete session…" — the button becomes
-  available again; after deleting, the Session moves to "ungrouped".
-  Don't worry: that is only a cache entry and **disappears after restarting DSH**.
+| Case | "Delete permanently" | Deletable | What to do |
+|---|---|---|---|
+| Idle for a long time, background process released | clickable | ✅ yes | just click "Delete permanently" |
+| Background process still holds it | greyed out (disabled) | ❌ no | click **Archive** first, then open "Delete session" — the button becomes available; click "Delete permanently" |
+
+> A Session deleted after archiving moves to "ungrouped" — that is only a cache entry and **disappears after restarting DSH**.
 
 ## Install
 
@@ -44,7 +44,7 @@ A `patchReload: live` profile needs nothing else: the sidebar item is available 
 
 ## Usage
 
-Hover any Session row in the sidebar → click `...` → pick "Delete session…" → the dialog asks the host
+Hover any Session row in the sidebar → click `...` → pick "Delete session" → the dialog asks the host
 what would be removed (directories, bytes) and only the **Delete permanently** button performs it.
 
 **Irreversible. No backup is kept.**
@@ -88,7 +88,7 @@ Restart `dsh web` afterwards, then refresh the browser page:
   removing its Loader row is not enough to unload it; only a restart of the process does that (the same
   reason an install needs a restart);
 - The bundle the browser already loaded also survives until the page is reloaded, so the sidebar can keep
-  the "Delete session…" item until then;
+  the "Delete session" item until then;
 - A `patchReload: live` profile usually recomposes the host side right away, but **a restart remains the
   reliable route**.
 

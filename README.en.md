@@ -9,6 +9,24 @@ a "Delete session…" item that permanently removes one stored Session together 
 > plugin automates it in the correct order — **registry references first through the official write
 > chain, stored files second** — so host memory can never write a deleted id back into the file.
 
+## ⚠️ Read this before deleting
+
+> **Precondition**: set the sidebar's session filter to **"All conversations (show archived)"** — archived
+> Sessions are otherwise invisible and cannot be selected for deletion.
+
+**1. Deleting a whole workspace**
+
+Its Sessions move to "ungrouped" (DSH behaviour) and **can then be deleted directly**.
+
+**2. Deleting one Session inside a workspace**
+
+- **Its background process has been released** (the Session has been idle for a long time): the
+  "Delete permanently" button is clickable — just delete it.
+- **The button is disabled**: the Session's background process still holds it, so it cannot be deleted yet.
+- **To delete it anyway**: click **Archive** first, then open "Delete session…" — the button becomes
+  available again; after deleting, the Session moves to "ungrouped".
+  Don't worry: that is only a cache entry and **disappears after restarting DSH**.
+
 ## Install
 
 ```bash

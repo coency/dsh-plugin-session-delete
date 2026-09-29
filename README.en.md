@@ -14,18 +14,20 @@ a "Delete session" item that permanently removes one stored Session together wit
 > **Precondition**: set the sidebar's session filter to **"All conversations (show archived)"** — archived
 > Sessions are otherwise invisible and cannot be selected for deletion.
 
-**1. Deleting a whole workspace**
+**There is one test: does the host hold a running agent for this Session right now?**
 
-Its Sessions move to "ungrouped" (DSH behaviour) and **can then be deleted directly**.
+| "Delete permanently" | Meaning | What to do |
+|---|---|---|
+| **clickable** | the host has no agent running for it | click "Delete permanently" — the row disappears immediately |
+| **greyed out (disabled)** | the host still holds it (an agent or a background task is running inside) | click **Archive session** first to stop its work, then **Delete session** — the button becomes available |
 
-**2. Deleting one Session inside a workspace**
+**Beyond that test, a few rules matter:**
 
-| Case | "Delete permanently" | Deletable | What to do |
-|---|---|---|---|
-| Background process released (Session idle for a long time) | clickable | ✅ yes | just click "Delete permanently" |
-| Background process still holding it (Session used recently) | greyed out (disabled) | ❌ no | click **Archive session** first, then "Delete session" (the "Delete permanently" button becomes available again) |
-
-> A Session deleted after archiving moves to "ungrouped" — that is only a **leftover row in the list** (the host still remembers it in memory); **ignore it**. It disappears after restarting DSH, so don't worry.
+1. **It has nothing to do with how long it ran or has been idle** — only whether an agent is running for it right now.
+2. **Archiving ≠ releasing memory**: archiving only **stops its work**; the host keeps it in memory. An archived Session can be deleted, but **the row stays in the sidebar afterwards** (visible in "All conversations (show archived)") — that is only a leftover row in the list; **ignore it**, it disappears after restarting DSH.
+3. **Restarting DSH puts every Session back to "no agent running"** — if a batch of Sessions refuses to delete, restart first and delete them then; that is the easiest path.
+4. **Grouping does not affect deletion**: a workspace is only a grouping record and **deleting a workspace does not delete Session files** — those Sessions move to "ungrouped", and whether they can be deleted still follows the table above.
+5. **Deletion is irreversible and keeps no backup.**
 
 ## Install
 

@@ -25,7 +25,7 @@ Its Sessions move to "ungrouped" (DSH behaviour) and **can then be deleted direc
 | Background process released (Session idle for a long time) | clickable | ✅ yes | just click "Delete permanently" |
 | Background process still holding it (Session used recently) | greyed out (disabled) | ❌ no | click **Archive session** first, then "Delete session" (the "Delete permanently" button becomes available again) |
 
-> A Session deleted after archiving moves to "ungrouped" — that is only a cache entry; **ignore it**. It disappears after restarting DSH, so don't worry.
+> A Session deleted after archiving moves to "ungrouped" — that is only a **leftover row in the list** (the host still remembers it in memory); **ignore it**. It disappears after restarting DSH, so don't worry.
 
 ## Install
 

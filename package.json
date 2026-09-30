@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-session-delete",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "DeepSeek Harness (DSH) 的会话删除插件：侧栏会话行的「删除会话」入口，先经官方写链摘除注册表引用、再删除存储文件，不可恢复。",
   "keywords": [
     "dsh",

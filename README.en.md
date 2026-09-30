@@ -31,18 +31,28 @@ a "Delete session" item that permanently removes one stored Session together wit
 
 ## Install
 
-```bash
-dsh plugin --profile web add github:coency/dsh-plugin-session-delete
+**Desktop app (DeepSeek Harness)**
+
+Add this in **Settings → Plugins**:
+
+```
+github:coency/dsh-plugin-session-delete
 ```
 
-The package declares `dsh.bundle.patch`, so the plugin manager installs and enables it as a bundle.
-Start (or restart) the web surface afterwards:
+Then **quit the app completely and start it again** (the host half only loads at startup). After the
+restart, every Session row's `...` menu offers "Delete session".
+
+**Web surface / CLI (`dsh plugin`)**
 
 ```bash
+dsh plugin --profile web add github:coency/dsh-plugin-session-delete
 dsh web
 ```
 
 A `patchReload: live` profile needs nothing else: the sidebar item is available right after the restart.
+
+> The package declares `dsh.bundle.patch`, so the plugin manager installs and enables it as a bundle.
+> Add `#v0.2.8` to the URL to pin a version.
 
 ## Usage
 
@@ -80,11 +90,15 @@ version exemption and raise the install barrier.
 
 ## Uninstall
 
+**Desktop app**: remove this plugin in **Settings → Plugins**, then **quit the app completely and start it again**.
+
+**Web surface / CLI**:
+
 ```bash
 dsh plugin --profile web remove dsh-plugin-session-delete
 ```
 
-Restart `dsh web` afterwards, then refresh the browser page:
+Restart DSH afterwards, then refresh the browser page:
 
 - The running host process may still hold the **already-loaded plugin module** — deleting its files and
   removing its Loader row is not enough to unload it; only a restart of the process does that (the same

@@ -1,7 +1,5 @@
 # dsh-plugin-session-delete
 
-中文 | [English](README.en.md)
-
 给 DeepSeek Harness (DSH) 补上官方不提供的删除会话能力：侧栏每个会话行的 `...` 菜单里多一个
 「删除会话」，确认后即可把某个已存储会话连同它的注册表引用一起彻底清掉。
 

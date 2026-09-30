@@ -33,7 +33,7 @@ a "Delete session" item that permanently removes one stored Session together wit
 
 **Desktop app (DeepSeek Harness)**
 
-Add this in **Settings → Plugins**:
+Add this under **Plugins → Add plugin**:
 
 ```
 github:coency/dsh-plugin-session-delete
@@ -90,7 +90,7 @@ version exemption and raise the install barrier.
 
 ## Uninstall
 
-**Desktop app**: remove this plugin in **Settings → Plugins**, then **quit the app completely and start it again**.
+**Desktop app**: remove this plugin on the **Plugins** page, then **quit the app completely and start it again**.
 
 **Web surface / CLI**:
 

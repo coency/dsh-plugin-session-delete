@@ -80,10 +80,15 @@ what would be removed (directories, bytes) and only the **Delete permanently** b
 
 ## Version compatibility
 
-This plugin depends on DSH **internal contracts**, not on a public plugin API; it is verified on
-**dsh 0.1.7-rc.2** (Web profile, Windows). DSH is at release-candidate stage, so if the sidebar item
-disappears or a delete reports an error after an upgrade, one of those internal contracts moved — the fix
-is usually a few lines, found by reading the new DSH package sources.
+This plugin depends on DSH **internal contracts**, not on a public plugin API; it is verified on:
+
+- **dsh 0.1.7-rc.2** (Web profile, Windows);
+- **the desktop app 0.2.0-rc.2** (Windows) — the plugin's own self-check reports `markers "protocol"` and
+  `wire "accepted"`, with the tools and the Remote service registering cleanly.
+
+DSH is at release-candidate stage, so if the sidebar item disappears or a delete reports an error after
+an upgrade, one of those internal contracts moved — the fix is usually a few lines, found by reading the
+new DSH package sources.
 
 No DSH peer dependency is declared on purpose: pinning one would force every future DSH version through a
 version exemption and raise the install barrier.

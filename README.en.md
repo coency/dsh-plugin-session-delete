@@ -39,8 +39,9 @@ Add this under **Plugins → Add plugin**:
 github:coency/dsh-plugin-session-delete
 ```
 
-Then **quit the app completely and start it again** (the host half only loads at startup). After the
-restart, every Session row's `...` menu offers "Delete session".
+It normally takes effect **right away** (the desktop app loads it automatically and may restart its host
+subprocess). If a Session row's `...` menu does not offer "Delete session" yet, **switch to another
+Session**, or **quit the app and open it again**.
 
 **Web surface / CLI (`dsh plugin`)**
 

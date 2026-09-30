@@ -1,4 +1,4 @@
-# dsh-session-delete
+# dsh-plugin-session-delete
 
 中文 | [English](README.en.md)
 
@@ -31,7 +31,7 @@
 ## 安装
 
 ```bash
-dsh plugin --profile web add github:coency/dsh-session-delete
+dsh plugin --profile web add github:coency/dsh-plugin-session-delete
 ```
 
 本包声明了 `dsh.bundle.patch`，插件管理器会把它作为组合包安装并默认启用。安装完成后启动（或重启）Web 界面：
@@ -76,7 +76,7 @@ dsh web
 ## 卸载
 
 ```bash
-dsh plugin --profile web remove dsh-session-delete
+dsh plugin --profile web remove dsh-plugin-session-delete
 ```
 
 卸载后要**重启一次 `dsh web`**，并刷新浏览器页面：

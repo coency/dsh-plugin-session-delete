@@ -1,4 +1,4 @@
-# dsh-session-delete
+# dsh-plugin-session-delete
 
 [中文](README.md) | English
 
@@ -32,7 +32,7 @@ a "Delete session" item that permanently removes one stored Session together wit
 ## Install
 
 ```bash
-dsh plugin --profile web add github:coency/dsh-session-delete
+dsh plugin --profile web add github:coency/dsh-plugin-session-delete
 ```
 
 The package declares `dsh.bundle.patch`, so the plugin manager installs and enables it as a bundle.
@@ -81,7 +81,7 @@ version exemption and raise the install barrier.
 ## Uninstall
 
 ```bash
-dsh plugin --profile web remove dsh-session-delete
+dsh plugin --profile web remove dsh-plugin-session-delete
 ```
 
 Restart `dsh web` afterwards, then refresh the browser page:

@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-session-delete",
-  "version": "0.2.9",
+  "version": "0.3.1",
   "description": "DeepSeek Harness (DSH) 的会话删除插件：侧栏会话行的「删除会话」入口，先经官方写链摘除注册表引用、再删除存储文件，不可恢复。",
   "keywords": [
     "dsh",
@@ -10,8 +10,15 @@
     "session",
     "delete"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coency/dsh-plugin-session-delete.git"
+  },
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",

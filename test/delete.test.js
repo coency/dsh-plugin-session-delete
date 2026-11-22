@@ -80,6 +80,7 @@ async function fixture(options = {}) {
 function makeContext(home, options = {}) {
   const workspace = {
     id: 'ws-alpha',
+    title: 'Default workspace',
     sessionIds: [...(options.sessionIds ?? [])],
     async detachSession(sessionId) {
       workspace.sessionIds = workspace.sessionIds.filter((entry) => entry !== sessionId)
@@ -176,6 +177,8 @@ test('deletion removes the files, the cache record, the references and the empty
   assert.equal(report.freedBytes, Buffer.byteLength(LOG_BODY) + Buffer.byteLength(CACHE_BODY))
   assert.equal(report.cacheRecordDeleted, true)
   assert.deepEqual(report.detachedFromWorkspaces, ['ws-alpha'])
+  // The dialog shows titles, so the report has to carry them too.
+  assert.deepEqual(report.detachedWorkspaceTitles, ['Default workspace'])
   assert.deepEqual(report.prunedProjectDirs, [paths.projectDir])
 
   assert.equal(await exists(paths.sessionDir), false)
@@ -310,6 +313,9 @@ test('a partial failure keeps the marker, stays retryable and leaks no host path
     assert.equal(error.details.deletedPathCount, 1)
     assert.equal(error.details.failedPathCount, 1)
     assert.equal(error.details.registryReferencesDropped, true)
+    // The user is told which kind of thing survived, not where it lives.
+    assert.deepEqual(error.details.failedKinds, { 'cache-record': 1 })
+    assert.match(error.message, /1 cache record/)
     return true
   })
 

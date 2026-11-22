@@ -186,10 +186,27 @@ test('the sweep drops archived and pinned markers with nothing behind them', asy
   const purged = await purgeStaleMarkers(ctx, paths.home)
   assert.deepEqual(purged.archived, [GHOST_ARCHIVED])
   assert.deepEqual(purged.pinned, [GHOST_PINNED])
+  assert.equal(purged.cacheRecords, 0)
   // ASSIGNED still holds files, so its marker must survive the sweep; UNASSIGNED
   // does too, so its pin must survive as well.
   assert.deepEqual(registry.archivedSessionIds, [ASSIGNED])
   assert.deepEqual(registry.pinnedSessionIds, [UNASSIGNED])
+})
+
+test('the sweep removes an orphan cache record instead of keeping its marker', async (t) => {
+  const paths = await fixture()
+  t.after(async () => { await rm(paths.home, { recursive: true, force: true }) })
+  // CACHE_ONLY has a projection-cache record but no stored directory, which is the
+  // state a deleted-but-still-held Session can leave behind.
+  const { ctx, registry } = makeContext(paths.home, {
+    registry: { archivedSessionIds: [CACHE_ONLY, GHOST_ARCHIVED] }
+  })
+
+  const purged = await purgeStaleMarkers(ctx, paths.home)
+  assert.deepEqual([...purged.archived].sort(), [CACHE_ONLY, GHOST_ARCHIVED].sort())
+  assert.equal(purged.cacheRecords, 1)
+  assert.equal(await exists(join(paths.cacheRoot, `${CACHE_ONLY}.json`)), false)
+  assert.deepEqual(registry.archivedSessionIds, [])
 })
 
 test('the sweep works through a set larger than its budget', async (t) => {

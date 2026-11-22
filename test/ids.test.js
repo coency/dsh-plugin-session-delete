@@ -98,14 +98,18 @@ test('probePath separates "absent" from "could not look"', async () => {
 test('describeRemovalFailures keeps host paths out of the wire payload', () => {
   const secret = join('C:\\', 'Users', 'someone', '.dsh', 'sessions', '--proj--', 'session-x')
   const failure = describeRemovalFailures('session-x', [
-    { path: secret, reason: 'EBUSY' },
-    { path: `${secret}.json`, reason: 'EPERM' }
+    { path: secret, reason: 'EBUSY', kind: 'session-dir' },
+    { path: `${secret}.json`, reason: 'EPERM', kind: 'cache-record' }
   ], 3)
 
   assert.equal(failure.message.includes(secret), false)
   assert.equal(failure.message.includes('.dsh'), false)
   assert.equal(failure.message.includes('EBUSY'), true)
   assert.equal(failure.message.includes('EPERM'), true)
+  // What travels is the kind of thing left behind, never where it lives.
+  assert.equal(failure.message.includes('1 session directory'), true)
+  assert.equal(failure.message.includes('1 cache record'), true)
+  assert.deepEqual(failure.details.failedKinds, { 'session-dir': 1, 'cache-record': 1 })
   assert.equal(failure.details.deletedPathCount, 1)
   assert.equal(failure.details.failedPathCount, 2)
   assert.equal(failure.details.totalPathCount, 3)

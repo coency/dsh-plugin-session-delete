@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Delete sessions",
+    "description": "Deletes stored Sessions from the sidebar session menu (irreversible); audits leftovers read-only and self-checks compatibility."
+  }
+}
